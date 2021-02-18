@@ -22,7 +22,7 @@ export interface Teacher {
 
 interface TeacherItemProps {
   teacher: Teacher;
-  favorited?: boolean;
+  favorited: boolean;
 }
 
 const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
@@ -32,7 +32,7 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
     api.post('connections', {
       user_id: teacher.id,
     });
-    
+
     Linking.openURL(`whatsapp://send?phone=+55${teacher.whatsapp}`);
   }
 
@@ -40,23 +40,22 @@ const TeacherItem: React.FC<TeacherItemProps> = ({ teacher, favorited }) => {
     const favorites = await AsyncStorage.getItem('favorites');
 
     let favoritesArray = [];
-      if (favorites) {
-        favoritesArray = JSON.parse(favorites);
-      }
+    if (favorites) {
+      favoritesArray = JSON.parse(favorites);
+    }
 
-    if (isFavorited) { // remover dos favoritos
+    if (isFavorited) { // remover professor dos favoritos
       const favoriteIndex = favoritesArray.findIndex((teacherItem: Teacher) => {
         return teacherItem.id === teacher.id;
       });
 
       favoritesArray.splice(favoriteIndex, 1);
-      setIsFavorited(false);     
-    } else { // remover dos favoritos           
+      setIsFavorited(false);
+    } else { // Adicionar professor aos favoritos         
       favoritesArray.push(teacher);
-
       setIsFavorited(true);
-      await AsyncStorage.setItem('favorites', JSON.stringify(favoritesArray));
     }
+    await AsyncStorage.setItem('favorites', JSON.stringify(favoritesArray));
   }
 
   return (
